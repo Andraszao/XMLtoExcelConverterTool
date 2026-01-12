@@ -14,54 +14,184 @@ HTML = '''
 <html>
 <head>
     <title>Job XML Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 15px;
+        }
+        
+        .form-section {
+            margin-bottom: 32px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: #f7fafc;
+        }
+        
+        input[type="text"]:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        input[type="text"]::placeholder {
+            color: #a0aec0;
+        }
+        
         button {
-            background: #007bff;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 30px;
+            padding: 14px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 12px;
         }
+        
         button:hover {
-            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
         .divider {
             text-align: center;
-            margin: 20px 0;
-            color: #999;
+            margin: 32px 0;
+            position: relative;
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+        
+        .divider::before {
+            left: 0;
+        }
+        
+        .divider::after {
+            right: 0;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+        }
+        
+        input[type="file"] {
+            cursor: pointer;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background: #edf2f7;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-right: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background: #e2e8f0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 24px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Convert Job XML to Excel</h1>
-    
-    <form method="POST" action="/convert-url">
-        <label>Paste URL to .gz file:</label>
-        <input type="text" name="url" placeholder="https://example.com/jobs.xml.gz" required>
-        <button type="submit">Convert from URL</button>
-    </form>
-    
-    <div class="divider">— OR —</div>
-    
-    <form method="POST" action="/convert-file" enctype="multipart/form-data">
-        <label>Upload .gz file:</label>
-        <input type="file" name="file" accept=".gz" required>
-        <button type="submit">Convert from File</button>
-    </form>
+    <div class="container">
+        <h1>Job XML Converter</h1>
+        <p class="subtitle">Transform your job XML files into clean Excel spreadsheets</p>
+        
+        <form method="POST" action="/convert-url" class="form-section">
+            <label>Paste URL to .gz file</label>
+            <input type="text" name="url" placeholder="https://example.com/jobs.xml.gz" required>
+            <button type="submit">Convert from URL</button>
+        </form>
+        
+        <div class="divider">or</div>
+        
+        <form method="POST" action="/convert-file" enctype="multipart/form-data" class="form-section">
+            <label>Upload .gz file</label>
+            <div class="file-input-wrapper">
+                <input type="file" name="file" accept=".gz" required>
+            </div>
+            <button type="submit">Convert from File</button>
+        </form>
+    </div>
 </body>
 </html>
 '''
@@ -118,4 +248,5 @@ def convert_file():
     return send_file(output_file, as_attachment=True, download_name='jobs.xlsx')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
